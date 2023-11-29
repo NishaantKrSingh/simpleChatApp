@@ -7,3 +7,7 @@ Requirements: Python 3
 `pip install flask`
 
 `pip install flask_socketio`
+
+
+`python3 main.py`
+
