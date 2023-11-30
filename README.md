@@ -11,3 +11,4 @@ Requirements: Python 3
 
 `python3 main.py`
 
+Added using echo command
