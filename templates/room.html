@@ -1,52 +1,50 @@
 {% extends 'base.html' %} {% block content %}
 <div class="message-box">
-  <h2>Chat Room: {{code}}</h2>
+  <h2>Chat Room: {{code}} <small style="font-size: 10px; color: darkblue;">(Use This To Connect)</small></h2>
   <div class="messages" id="messages"></div>
-  <div class="inputs">
-    <input
-      type="text"
-      rows="3"
-      placeholder="Message"
-      name="message"
-      id="message"
-    />
-    <button type="button" name="send" id="send-btn" onClick="sendMessage()">
+  <form class="inputs" onsubmit="sendMessage(event)">
+    <input type="text" rows="3" placeholder="Message" name="message" id="message" />
+    <button type="submit" name="send" id="send-btn" ">
       Send
     </button>
-  </div>
+  </form>
 </div>
-<script type="text/javascript">
-  var socketio = io();
+<script type=" text/javascript">
+      var socketio = io();
 
-  const messages = document.getElementById("messages");
+      const messages = document.getElementById("messages");
 
-  const createMessage = (name, msg) => {
-    const content = `
-    <div class="text">
+      const createMessage = (name, msg) => {
+      const content = `
+      <div class="text">
         <span>
-            <strong>${name}</strong>: ${msg}
+          <strong>${name}</strong>: ${msg}
         </span>
         <span class="muted">
-            ${new Date().toLocaleString()}
+          ${new Date().toLocaleString()}
         </span>
-    </div>
-    `;
-    messages.innerHTML += content;
-  };
+      </div>
+      `;
+      messages.innerHTML += content;
+      };
 
-  socketio.on("message", (data) => {
-    createMessage(data.name, data.message);
-  });
+      socketio.on("message", (data) => {
+      createMessage(data.name, data.message);
+      });
 
-  const sendMessage = () => {
-    const message = document.getElementById("message");
-    if (message.value == "") return;
-    socketio.emit("message", { data: message.value });
-    message.value = "";
-  };
-</script>
-{% for msg in messages %}
-<script type="text/javascript">
-  createMessage("{{msg.name}}", "{{msg.message}}");
-</script>
-{% endfor %} {% endblock %}
+      const sendMessage = (event) => {
+        event.preventDefault();  // Prevent the default form submission
+      
+        const message = document.getElementById("message");
+        if (message.value == "") return;
+      
+        socketio.emit("message", { data: message.value });
+        message.value = "";
+      };
+      
+      </script>
+      {% for msg in messages %}
+      <script type="text/javascript">
+        createMessage("{{msg.name}}", "{{msg.message}}");
+      </script>
+      {% endfor %} {% endblock %}
